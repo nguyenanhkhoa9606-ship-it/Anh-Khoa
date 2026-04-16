@@ -1,0 +1,1058 @@
+import { useState, useEffect } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import {
+  Mail,
+  Phone,
+  MapPin,
+  Calendar,
+  GraduationCap,
+  Award,
+  Stethoscope,
+  Users,
+  BookOpen,
+  Heart,
+  Star,
+  ChevronDown,
+  Menu,
+  X,
+  PawPrint,
+  FlaskConical,
+  ClipboardCheck,
+  MessageCircle,
+  Sparkles,
+  Leaf,
+  Sun,
+  Briefcase,
+  GitBranch,
+  Link as LinkIcon,
+} from 'lucide-react';
+
+// ==================== DỮ LIỆU CÁ NHÂN ====================
+const personalInfo = {
+  name: 'Nguyễn Anh Khoa',
+  title: 'Kỹ sư Chăn nuôi & Học viên Cao học Thú y',
+  description: 'Đam mê nghiên cứu và ứng dụng khoa học vào chăn nuôi hiện đại, cải thiện năng suất và sức khỏe đàn gia súc.',
+  birthday: '02/10/2000',
+  hometown: 'An Phú, An Giang',
+  email: 'Nguyenanhkhoa9606@gmail.com',
+  phone: '0869089606',
+  github: 'https://github.com',
+  linkedin: 'https://linkedin.com',
+  avatar: 'https://i.ibb.co/Xx8G85wG/avatar.jpg',
+};
+
+// ==================== KINH NGHIỆM LÀM VIỆC ====================
+const experiences = [
+  {
+    period: '2023 - Hiện tại',
+    position: 'Nghiên cứu sinh Cao học Thú y',
+    company: 'Trường Nông nghiệp, Đại học Cần Thơ',
+    description: 'Nghiên cứu chuyên sâu về bệnh truyền nhiễm trên gia súc và phương pháp phòng ngừa.',
+    achievements: ['Công bố 2 bài báo khoa học', 'Tham gia 3 đề tài nghiên cứu cấp trường'],
+  },
+  {
+    period: '2022 - 2023',
+    position: 'Kỹ sư Chăn nuôi',
+    company: 'Trang trại An Phú, An Giang',
+    description: 'Quản lý đàn gia súc, áp dụng quy trình chăn nuôi an toàn sinh học.',
+    achievements: ['Tăng năng suất 15%', 'Giảm tỷ lệ bệnh 20%'],
+  },
+  {
+    period: '2021 - 2022',
+    position: 'Thực tập sinh Thú y',
+    company: 'Phòng Khám Thú y Cần Thơ',
+    description: 'Hỗ trợ chẩn đoán và điều trị bệnh cho gia súc, gia cầm.',
+    achievements: ['Hoàn thành 500+ ca khám', 'Được đánh giá xuất sắc'],
+  },
+];
+
+// ==================== KỸ NĂNG ====================
+const hardSkills = [
+  { name: 'Chẩn đoán bệnh', level: 90 },
+  { name: 'Quản lý đàn gia súc', level: 85 },
+  { name: 'Xét nghiệm vi sinh', level: 80 },
+  { name: 'An toàn sinh học', level: 88 },
+  { name: 'Dinh dưỡng chăn nuôi', level: 92 },
+];
+
+const softSkills = [
+  { name: 'Giao tiếp', level: 85 },
+  { name: 'Làm việc nhóm', level: 90 },
+  { name: 'Giải quyết vấn đề', level: 87 },
+  { name: 'Quản lý thời gian', level: 82 },
+  { name: 'Nghiên cứu khoa học', level: 88 },
+];
+
+// ==================== HỌC VẤN & CHỨNG CHỈ ====================
+const education = [
+  {
+    degree: 'Cao học Thú y',
+    school: 'Trường Nông nghiệp, Đại học Cần Thơ',
+    year: '2023 - Hiện tại',
+    icon: GraduationCap,
+  },
+  {
+    degree: 'Kỹ sư Chăn nuôi',
+    school: 'Đại học Cần Thơ',
+    year: '2018 - 2022',
+    icon: Award,
+  },
+  {
+    degree: 'Chứng chỉ An toàn Sinh học',
+    school: 'Bộ Nông nghiệp & PTNT',
+    year: '2022',
+    icon: ClipboardCheck,
+  },
+  {
+    degree: 'Chứng chỉ Chẩn đoán Bệnh',
+    school: 'Viện Thú y Trung ương',
+    year: '2023',
+    icon: Stethoscope,
+  },
+];
+
+// ==================== COMPONENTS ====================
+
+// Navigation Component
+const Navigation = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 50);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const navItems = [
+    { name: 'Trang chủ', href: '#home' },
+    { name: 'Giới thiệu', href: '#about' },
+    { name: 'Kinh nghiệm', href: '#experience' },
+    { name: 'Kỹ năng', href: '#skills' },
+    { name: 'Học vấn', href: '#education' },
+    { name: 'Liên hệ', href: '#contact' },
+  ];
+
+  return (
+    <motion.nav
+      initial={{ y: -100 }}
+      animate={{ y: 0 }}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        scrolled
+          ? 'bg-white/90 backdrop-blur-md shadow-lg'
+          : 'bg-transparent'
+      }`}
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16 md:h-20">
+          <motion.a
+            href="#home"
+            whileHover={{ scale: 1.05 }}
+            className="flex items-center gap-2 text-xl md:text-2xl font-bold text-green-600"
+          >
+            <Leaf className="w-6 h-6 md:w-8 md:h-8" />
+            <span className="hidden sm:inline">NAK</span>
+          </motion.a>
+
+          <div className="hidden md:flex items-center gap-1">
+            {navItems.map((item) => (
+              <motion.a
+                key={item.name}
+                href={item.href}
+                whileHover={{ scale: 1.05, y: -2 }}
+                className="px-4 py-2 rounded-full text-gray-700 hover:text-green-600 hover:bg-green-50 transition-all duration-300 font-medium"
+              >
+                {item.name}
+              </motion.a>
+            ))}
+          </div>
+
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="md:hidden p-2 rounded-lg hover:bg-green-50 transition-colors"
+          >
+            {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
+        </div>
+      </div>
+
+      {isOpen && (
+        <motion.div
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: 'auto' }}
+          exit={{ opacity: 0, height: 0 }}
+          className="md:hidden bg-white border-t"
+        >
+          <div className="px-4 py-4 space-y-2">
+            {navItems.map((item) => (
+              <a
+                key={item.name}
+                href={item.href}
+                onClick={() => setIsOpen(false)}
+                className="block px-4 py-3 rounded-lg text-gray-700 hover:text-green-600 hover:bg-green-50 transition-colors font-medium"
+              >
+                {item.name}
+              </a>
+            ))}
+          </div>
+        </motion.div>
+      )}
+    </motion.nav>
+  );
+};
+
+// Hero Section
+const HeroSection = () => {
+  const { scrollY } = useScroll();
+  const y = useTransform(scrollY, [0, 500], [0, 100]);
+  const opacity = useTransform(scrollY, [0, 300], [1, 0]);
+
+  return (
+    <section
+      id="home"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-green-50 via-yellow-50 to-green-100"
+    >
+      <div className="absolute inset-0 overflow-hidden">
+        <motion.div
+          style={{ y }}
+          className="absolute top-20 left-10 w-32 h-32 bg-green-200/30 rounded-full blur-3xl"
+        />
+        <motion.div
+          style={{ y: useTransform(scrollY, [0, 500], [0, -50]) }}
+          className="absolute bottom-20 right-10 w-40 h-40 bg-yellow-200/30 rounded-full blur-3xl"
+        />
+        <motion.div
+          style={{ y: useTransform(scrollY, [0, 500], [0, 80]) }}
+          className="absolute top-40 right-20 w-24 h-24 bg-green-300/20 rounded-full blur-2xl"
+        />
+      </div>
+
+      <motion.div
+        animate={{ y: [0, -20, 0], rotate: [0, 10, 0] }}
+        transition={{ duration: 3, repeat: Infinity }}
+        className="absolute top-32 left-16 text-green-300/40"
+      >
+        <Leaf className="w-12 h-12" />
+      </motion.div>
+      <motion.div
+        animate={{ y: [0, -15, 0], rotate: [0, -10, 0] }}
+        transition={{ duration: 2.5, repeat: Infinity, delay: 0.5 }}
+        className="absolute bottom-40 left-24 text-yellow-300/40"
+      >
+        <Sun className="w-10 h-10" />
+      </motion.div>
+      <motion.div
+        animate={{ y: [0, -18, 0], rotate: [0, 15, 0] }}
+        transition={{ duration: 3.5, repeat: Infinity, delay: 1 }}
+        className="absolute top-48 right-32 text-green-300/40"
+      >
+        <PawPrint className="w-14 h-14" />
+      </motion.div>
+
+      <motion.div
+        style={{ opacity }}
+        className="relative z-10 text-center px-4 max-w-5xl mx-auto"
+      >
+        <motion.div
+          initial={{ scale: 0, rotate: -180 }}
+          animate={{ scale: 1, rotate: 0 }}
+          transition={{ duration: 0.8, type: 'spring' }}
+          className="relative mb-8 inline-block"
+        >
+          <div className="absolute inset-0 bg-gradient-to-r from-green-400 to-yellow-400 rounded-full blur-lg opacity-50 animate-pulse" />
+          <motion.img
+            whileHover={{ scale: 1.05 }}
+            src="https://i.ibb.co/Xx8G85wG/avatar.jpg"
+            alt={personalInfo.name}
+            className="relative w-40 h-40 md:w-52 md:h-52 rounded-full object-cover border-4 border-white shadow-2xl"
+            onError={(e) => {
+              e.currentTarget.src = 'https://ui-avatars.com/api/?name=Nguyen+Anh+Khoa&size=200&background=cce8d5&color=2d6a4f';
+            }}
+          />
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
+            className="absolute -top-2 -right-2 bg-white rounded-full p-2 shadow-lg"
+          >
+            <Sparkles className="w-5 h-5 text-yellow-500" />
+          </motion.div>
+        </motion.div>
+
+        <motion.h1
+          initial={{ y: 50, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.3, duration: 0.6 }}
+          className="text-4xl md:text-6xl lg:text-7xl font-bold text-gray-800 mb-4"
+        >
+          {personalInfo.name}
+        </motion.h1>
+
+        <motion.p
+          initial={{ y: 50, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.5, duration: 0.6 }}
+          className="text-lg md:text-xl text-green-600 font-semibold mb-6"
+        >
+          {personalInfo.title}
+        </motion.p>
+
+        <motion.p
+          initial={{ y: 50, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.7, duration: 0.6 }}
+          className="text-gray-600 text-base md:text-lg max-w-2xl mx-auto mb-8 leading-relaxed"
+        >
+          {personalInfo.description}
+        </motion.p>
+
+        <motion.div
+          initial={{ y: 50, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.9, duration: 0.6 }}
+          className="flex flex-col sm:flex-row gap-4 justify-center"
+        >
+          <motion.a
+            href="#contact"
+            whileHover={{ scale: 1.05, y: -3 }}
+            whileTap={{ scale: 0.95 }}
+            className="px-8 py-4 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-full font-semibold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2"
+          >
+            <MessageCircle className="w-5 h-5" />
+            Liên hệ với tôi
+          </motion.a>
+          <motion.a
+            href="#about"
+            whileHover={{ scale: 1.05, y: -3 }}
+            whileTap={{ scale: 0.95 }}
+            className="px-8 py-4 bg-white text-green-600 rounded-full font-semibold shadow-lg hover:shadow-xl transition-all duration-300 border-2 border-green-200 flex items-center justify-center gap-2"
+          >
+            Tìm hiểu thêm
+            <ChevronDown className="w-5 h-5" />
+          </motion.a>
+        </motion.div>
+      </motion.div>
+
+      <motion.div
+        animate={{ y: [0, 10, 0] }}
+        transition={{ duration: 1.5, repeat: Infinity }}
+        className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
+      >
+        <ChevronDown className="w-8 h-8 text-green-400" />
+      </motion.div>
+    </section>
+  );
+};
+
+// About Section
+const AboutSection = () => {
+  return (
+    <section id="about" className="py-20 md:py-32 bg-white">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-16"
+        >
+          <motion.div
+            whileHover={{ rotate: 10, scale: 1.1 }}
+            className="inline-block mb-4"
+          >
+            <Heart className="w-12 h-12 text-red-400" />
+          </motion.div>
+          <h2 className="text-3xl md:text-5xl font-bold text-gray-800 mb-4">
+            Giới Thiệu Bản Thân
+          </h2>
+          <div className="w-24 h-1 bg-gradient-to-r from-green-400 to-yellow-400 mx-auto rounded-full" />
+        </motion.div>
+
+        <div className="grid md:grid-cols-2 gap-12 items-center">
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="space-y-6"
+          >
+            <motion.div
+              whileHover={{ scale: 1.02, y: -5 }}
+              className="bg-gradient-to-r from-green-50 to-green-100 p-6 rounded-2xl shadow-md border border-green-200"
+            >
+              <div className="flex items-start gap-4">
+                <div className="bg-green-500 text-white p-3 rounded-xl">
+                  <Users className="w-6 h-6" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-gray-800 mb-2">
+                    Bạn Là Ai?
+                  </h3>
+                  <p className="text-gray-600 leading-relaxed">
+                    Tôi là một kỹ sư chăn nuôi đam mê với hơn 5 năm kinh nghiệm trong lĩnh vực 
+                    thú y và quản lý đàn gia súc. Luôn nỗ lực học hỏi và cập nhật những kiến 
+                    thức mới nhất về khoa học chăn nuôi.
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+
+            <motion.div
+              whileHover={{ scale: 1.02, y: -5 }}
+              className="bg-gradient-to-r from-yellow-50 to-yellow-100 p-6 rounded-2xl shadow-md border border-yellow-200"
+            >
+              <div className="flex items-start gap-4">
+                <div className="bg-yellow-500 text-white p-3 rounded-xl">
+                  <Stethoscope className="w-6 h-6" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-gray-800 mb-2">
+                    Bạn Làm Gì?
+                  </h3>
+                  <p className="text-gray-600 leading-relaxed">
+                    Chuyên nghiên cứu, chẩn đoán và phòng ngừa bệnh trên gia súc. 
+                    Tư vấn và áp dụng các giải pháp chăn nuôi an toàn sinh học, 
+                    cải thiện năng suất và chất lượng sản phẩm.
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+
+            <motion.div
+              whileHover={{ scale: 1.02, y: -5 }}
+              className="bg-gradient-to-r from-green-50 to-yellow-50 p-6 rounded-2xl shadow-md border border-green-200"
+            >
+              <div className="flex items-start gap-4">
+                <div className="bg-gradient-to-r from-green-500 to-yellow-500 text-white p-3 rounded-xl">
+                  <Award className="w-6 h-6" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-gray-800 mb-2">
+                    Giá Trị Mang Lại
+                  </h3>
+                  <p className="text-gray-600 leading-relaxed">
+                    Cải thiện năng suất chăn nuôi lên đến 25%, giảm thiểu rủi ro 
+                    bệnh tật, và ứng dụng khoa học thú y hiện đại vào thực tiễn 
+                    sản xuất tại Việt Nam.
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, x: 50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="bg-gradient-to-br from-green-50 via-yellow-50 to-green-100 p-8 rounded-3xl shadow-xl"
+          >
+            <h3 className="text-2xl font-bold text-gray-800 mb-6 text-center">
+              Thông Tin Cá Nhân
+            </h3>
+            <div className="space-y-4">
+              <div className="flex items-center gap-4 p-4 bg-white rounded-xl shadow-sm">
+                <div className="bg-green-100 p-3 rounded-lg">
+                  <Calendar className="w-5 h-5 text-green-600" />
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Ngày sinh</p>
+                  <p className="font-semibold text-gray-800">{personalInfo.birthday}</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-4 p-4 bg-white rounded-xl shadow-sm">
+                <div className="bg-yellow-100 p-3 rounded-lg">
+                  <MapPin className="w-5 h-5 text-yellow-600" />
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Quê quán</p>
+                  <p className="font-semibold text-gray-800">{personalInfo.hometown}</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-4 p-4 bg-white rounded-xl shadow-sm">
+                <div className="bg-green-100 p-3 rounded-lg">
+                  <GraduationCap className="w-5 h-5 text-green-600" />
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Học vấn cao nhất</p>
+                  <p className="font-semibold text-gray-800">Cao học Thú y</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-4 p-4 bg-white rounded-xl shadow-sm">
+                <div className="bg-yellow-100 p-3 rounded-lg">
+                  <BookOpen className="w-5 h-5 text-yellow-600" />
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Sở thích</p>
+                  <p className="font-semibold text-gray-800">Nghiên cứu, Đọc sách, Thể thao</p>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// Experience Section
+const ExperienceSection = () => {
+  return (
+    <section id="experience" className="py-20 md:py-32 bg-gradient-to-b from-green-50 to-white">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-16"
+        >
+          <motion.div
+            whileHover={{ rotate: -10, scale: 1.1 }}
+            className="inline-block mb-4"
+          >
+            <Briefcase className="w-12 h-12 text-green-500" />
+          </motion.div>
+          <h2 className="text-3xl md:text-5xl font-bold text-gray-800 mb-4">
+            Kinh Nghiệm Làm Việc
+          </h2>
+          <div className="w-24 h-1 bg-gradient-to-r from-green-400 to-yellow-400 mx-auto rounded-full" />
+        </motion.div>
+
+        <div className="relative">
+          <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-green-300 via-yellow-300 to-green-300 rounded-full md:-translate-x-1/2" />
+
+          <div className="space-y-12">
+            {experiences.map((exp, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: index * 0.2 }}
+                className={`relative flex flex-col md:flex-row gap-8 ${
+                  index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'
+                }`}
+              >
+                <div className="absolute left-4 md:left-1/2 w-4 h-4 bg-green-500 rounded-full border-4 border-white shadow-lg md:-translate-x-1/2 z-10" />
+
+                <div className={`flex-1 ml-12 md:ml-0 ${index % 2 === 0 ? 'md:pr-12' : 'md:pl-12'}`}>
+                  <motion.div
+                    whileHover={{ scale: 1.02, y: -5 }}
+                    className="bg-white p-6 rounded-2xl shadow-lg border border-green-100 hover:shadow-xl transition-all duration-300"
+                  >
+                    <div className="flex flex-wrap items-center gap-3 mb-4">
+                      <span className="px-4 py-1.5 bg-gradient-to-r from-green-400 to-green-500 text-white text-sm font-semibold rounded-full">
+                        {exp.period}
+                      </span>
+                    </div>
+                    <h3 className="text-xl font-bold text-gray-800 mb-2">
+                      {exp.position}
+                    </h3>
+                    <p className="text-green-600 font-medium mb-3">{exp.company}</p>
+                    <p className="text-gray-600 mb-4 leading-relaxed">
+                      {exp.description}
+                    </p>
+                    <div className="space-y-2">
+                      <p className="text-sm font-semibold text-gray-700">Thành tựu:</p>
+                      <ul className="space-y-1">
+                        {exp.achievements.map((achievement, i) => (
+                          <li
+                            key={i}
+                            className="flex items-center gap-2 text-gray-600 text-sm"
+                          >
+                            <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
+                            {achievement}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </motion.div>
+                </div>
+
+                <div className="flex-1 hidden md:block" />
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// Skills Section
+const SkillsSection = () => {
+  const [animatedSkills, setAnimatedSkills] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setAnimatedSkills(true), 500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const SkillBar = ({ name, level, color }: { name: string; level: number; color: string }) => (
+    <div className="mb-6">
+      <div className="flex justify-between mb-2">
+        <span className="font-medium text-gray-700">{name}</span>
+        <span className="text-sm text-gray-500">{level}%</span>
+      </div>
+      <div className="h-3 bg-gray-200 rounded-full overflow-hidden">
+        <motion.div
+          initial={{ width: 0 }}
+          animate={{ width: animatedSkills ? `${level}%` : 0 }}
+          transition={{ duration: 1.5, ease: 'easeOut' }}
+          className={`h-full rounded-full ${color}`}
+        />
+      </div>
+    </div>
+  );
+
+  return (
+    <section id="skills" className="py-20 md:py-32 bg-white">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-16"
+        >
+          <motion.div
+            whileHover={{ rotate: 180, scale: 1.1 }}
+            className="inline-block mb-4"
+          >
+            <FlaskConical className="w-12 h-12 text-yellow-500" />
+          </motion.div>
+          <h2 className="text-3xl md:text-5xl font-bold text-gray-800 mb-4">
+            Kỹ Năng Chuyên Môn
+          </h2>
+          <div className="w-24 h-1 bg-gradient-to-r from-green-400 to-yellow-400 mx-auto rounded-full" />
+        </motion.div>
+
+        <div className="grid md:grid-cols-2 gap-12">
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="bg-gradient-to-br from-green-50 to-green-100 p-8 rounded-3xl shadow-lg"
+          >
+            <div className="flex items-center gap-3 mb-8">
+              <div className="bg-green-500 text-white p-3 rounded-xl">
+                <ClipboardCheck className="w-6 h-6" />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-800">Kỹ Năng Cứng</h3>
+            </div>
+            {hardSkills.map((skill, index) => (
+              <SkillBar
+                key={index}
+                name={skill.name}
+                level={skill.level}
+                color="bg-gradient-to-r from-green-400 to-green-500"
+              />
+            ))}
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, x: 50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="bg-gradient-to-br from-yellow-50 to-yellow-100 p-8 rounded-3xl shadow-lg"
+          >
+            <div className="flex items-center gap-3 mb-8">
+              <div className="bg-yellow-500 text-white p-3 rounded-xl">
+                <Users className="w-6 h-6" />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-800">Kỹ Năng Mềm</h3>
+            </div>
+            {softSkills.map((skill, index) => (
+              <SkillBar
+                key={index}
+                name={skill.name}
+                level={skill.level}
+                color="bg-gradient-to-r from-yellow-400 to-yellow-500"
+              />
+            ))}
+          </motion.div>
+        </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+          className="mt-16 text-center"
+        >
+          <h3 className="text-xl font-semibold text-gray-700 mb-8">
+            Các Kỹ Năng Khác
+          </h3>
+          <div className="flex flex-wrap justify-center gap-6">
+            {[
+              { icon: PawPrint, label: 'Chăm sóc động vật' },
+              { icon: FlaskConical, label: 'Xét nghiệm' },
+              { icon: BookOpen, label: 'Nghiên cứu' },
+              { icon: ClipboardCheck, label: 'Ghi chép' },
+              { icon: Users, label: 'Đào tạo' },
+              { icon: Heart, label: 'Yêu nghề' },
+            ].map((item, index) => (
+              <motion.div
+                key={index}
+                whileHover={{ scale: 1.1, y: -5 }}
+                className="flex flex-col items-center gap-2 p-4 bg-white rounded-2xl shadow-md hover:shadow-lg transition-all"
+              >
+                <item.icon className="w-8 h-8 text-green-500" />
+                <span className="text-sm text-gray-600">{item.label}</span>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+};
+
+// Education Section
+const EducationSection = () => {
+  return (
+    <section id="education" className="py-20 md:py-32 bg-gradient-to-b from-yellow-50 to-white">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-16"
+        >
+          <motion.div
+            whileHover={{ rotate: -10, scale: 1.1 }}
+            className="inline-block mb-4"
+          >
+            <GraduationCap className="w-12 h-12 text-green-500" />
+          </motion.div>
+          <h2 className="text-3xl md:text-5xl font-bold text-gray-800 mb-4">
+            Học Vấn & Chứng Chỉ
+          </h2>
+          <div className="w-24 h-1 bg-gradient-to-r from-green-400 to-yellow-400 mx-auto rounded-full" />
+        </motion.div>
+
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {education.map((edu, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: index * 0.1 }}
+              whileHover={{ scale: 1.05, y: -10 }}
+              className="bg-white p-6 rounded-2xl shadow-lg border border-green-100 hover:shadow-xl transition-all duration-300 text-center"
+            >
+              <div className="inline-block p-4 bg-gradient-to-br from-green-100 to-yellow-100 rounded-2xl mb-4">
+                <edu.icon className="w-8 h-8 text-green-600" />
+              </div>
+              <h3 className="text-lg font-bold text-gray-800 mb-2">
+                {edu.degree}
+              </h3>
+              <p className="text-green-600 font-medium text-sm mb-2">
+                {edu.school}
+              </p>
+              <p className="text-gray-500 text-sm">{edu.year}</p>
+            </motion.div>
+          ))}
+        </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+          className="mt-16 bg-gradient-to-r from-green-500 to-yellow-500 p-8 rounded-3xl shadow-xl text-white text-center"
+        >
+          <h3 className="text-2xl font-bold mb-4">🎓 Hành Trình Học Tập</h3>
+          <p className="text-lg opacity-90 max-w-3xl mx-auto">
+            Từ một sinh viên chăn nuôi đầy nhiệt huyết đến học viên cao học thú y, 
+            tôi luôn nỗ lực không ngừng để nâng cao kiến thức và kỹ năng, 
+            đóng góp cho ngành chăn nuôi Việt Nam.
+          </p>
+        </motion.div>
+      </div>
+    </section>
+  );
+};
+
+// Contact Section
+const ContactSection = () => {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    message: '',
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    alert('Cảm ơn bạn đã liên hệ! Tôi sẽ phản hồi sớm nhất có thể.');
+    setFormData({ name: '', email: '', message: '' });
+  };
+
+  return (
+    <section id="contact" className="py-20 md:py-32 bg-white">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-16"
+        >
+          <motion.div
+            whileHover={{ rotate: 10, scale: 1.1 }}
+            className="inline-block mb-4"
+          >
+            <Mail className="w-12 h-12 text-green-500" />
+          </motion.div>
+          <h2 className="text-3xl md:text-5xl font-bold text-gray-800 mb-4">
+            Liên Hệ Với Tôi
+          </h2>
+          <div className="w-24 h-1 bg-gradient-to-r from-green-400 to-yellow-400 mx-auto rounded-full" />
+          <p className="mt-4 text-gray-600 max-w-2xl mx-auto">
+            Bạn có thắc mắc hoặc muốn hợp tác? Đừng ngần ngại liên hệ với tôi!
+          </p>
+        </motion.div>
+
+        <div className="grid lg:grid-cols-2 gap-12">
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="space-y-6"
+          >
+            <div className="bg-gradient-to-br from-green-50 to-green-100 p-8 rounded-3xl shadow-lg">
+              <h3 className="text-2xl font-bold text-gray-800 mb-6">
+                Thông Tin Liên Hệ
+              </h3>
+              <div className="space-y-4">
+                <motion.a
+                  href={`mailto:${personalInfo.email}`}
+                  whileHover={{ scale: 1.02, x: 5 }}
+                  className="flex items-center gap-4 p-4 bg-white rounded-xl shadow-sm hover:shadow-md transition-all"
+                >
+                  <div className="bg-green-500 text-white p-3 rounded-xl">
+                    <Mail className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-500">Email</p>
+                    <p className="font-semibold text-gray-800">{personalInfo.email}</p>
+                  </div>
+                </motion.a>
+
+                <motion.a
+                  href={`tel:${personalInfo.phone}`}
+                  whileHover={{ scale: 1.02, x: 5 }}
+                  className="flex items-center gap-4 p-4 bg-white rounded-xl shadow-sm hover:shadow-md transition-all"
+                >
+                  <div className="bg-yellow-500 text-white p-3 rounded-xl">
+                    <Phone className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-500">Điện thoại</p>
+                    <p className="font-semibold text-gray-800">{personalInfo.phone}</p>
+                  </div>
+                </motion.a>
+
+                <motion.a
+                  href={personalInfo.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  whileHover={{ scale: 1.02, x: 5 }}
+                  className="flex items-center gap-4 p-4 bg-white rounded-xl shadow-sm hover:shadow-md transition-all"
+                >
+                  <div className="bg-gray-800 text-white p-3 rounded-xl">
+                    <GitBranch className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-500">Github</p>
+                    <p className="font-semibold text-gray-800">github.com/nguyenanhkhoa</p>
+                  </div>
+                </motion.a>
+
+                <motion.a
+                  href={personalInfo.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  whileHover={{ scale: 1.02, x: 5 }}
+                  className="flex items-center gap-4 p-4 bg-white rounded-xl shadow-sm hover:shadow-md transition-all"
+                >
+                  <div className="bg-blue-600 text-white p-3 rounded-xl">
+                    <LinkIcon className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-500">LinkedIn</p>
+                    <p className="font-semibold text-gray-800">linkedin.com/in/nguyenanhkhoa</p>
+                  </div>
+                </motion.a>
+              </div>
+            </div>
+
+            <motion.div
+              whileHover={{ scale: 1.02 }}
+              className="bg-gradient-to-br from-yellow-50 to-yellow-100 p-6 rounded-2xl shadow-lg"
+            >
+              <div className="flex items-center gap-4">
+                <div className="bg-yellow-500 text-white p-3 rounded-xl">
+                  <MapPin className="w-6 h-6" />
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Địa chỉ</p>
+                  <p className="font-semibold text-gray-800">{personalInfo.hometown}</p>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, x: 50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            <form onSubmit={handleSubmit} className="bg-gradient-to-br from-green-50 to-yellow-50 p-8 rounded-3xl shadow-lg">
+              <h3 className="text-2xl font-bold text-gray-800 mb-6">
+                Gửi Tin Nhắn
+              </h3>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Họ và tên
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    className="w-full px-4 py-3 rounded-xl border border-green-200 focus:border-green-500 focus:ring-2 focus:ring-green-200 outline-none transition-all"
+                    placeholder="Nhập họ tên của bạn"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Email
+                  </label>
+                  <input
+                    type="email"
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    className="w-full px-4 py-3 rounded-xl border border-green-200 focus:border-green-500 focus:ring-2 focus:ring-green-200 outline-none transition-all"
+                    placeholder="Nhập email của bạn"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Tin nhắn
+                  </label>
+                  <textarea
+                    value={formData.message}
+                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                    rows={5}
+                    className="w-full px-4 py-3 rounded-xl border border-green-200 focus:border-green-500 focus:ring-2 focus:ring-green-200 outline-none transition-all resize-none"
+                    placeholder="Nhập tin nhắn của bạn"
+                    required
+                  />
+                </div>
+                <motion.button
+                  whileHover={{ scale: 1.02, y: -2 }}
+                  whileTap={{ scale: 0.98 }}
+                  type="submit"
+                  className="w-full py-4 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2"
+                >
+                  <Mail className="w-5 h-5" />
+                  Gửi Tin Nhắn
+                </motion.button>
+              </div>
+            </form>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// Footer Component
+const Footer = () => {
+  return (
+    <footer className="bg-gradient-to-r from-green-600 to-green-700 text-white py-12">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid md:grid-cols-3 gap-8 mb-8">
+          <div className="text-center md:text-left">
+            <div className="flex items-center justify-center md:justify-start gap-2 mb-4">
+              <Leaf className="w-8 h-8" />
+              <span className="text-2xl font-bold">NAK Portfolio</span>
+            </div>
+            <p className="text-green-100">
+              Kết nối đam mê với khoa học, xây dựng tương lai bền vững cho ngành chăn nuôi Việt Nam.
+            </p>
+          </div>
+
+          <div className="text-center">
+            <h4 className="font-bold text-lg mb-4">Liên Kết Nhanh</h4>
+            <div className="flex flex-wrap justify-center gap-4">
+              {['Trang chủ', 'Giới thiệu', 'Kinh nghiệm', 'Kỹ năng', 'Liên hệ'].map((item) => (
+                <a
+                  key={item}
+                  href={`#${item.toLowerCase().replace(' ', '-')}`}
+                  className="text-green-100 hover:text-white transition-colors"
+                >
+                  {item}
+                </a>
+              ))}
+            </div>
+          </div>
+
+          <div className="text-center md:text-right">
+            <h4 className="font-bold text-lg mb-4">Kết Nối</h4>
+            <div className="flex justify-center md:justify-end gap-4">
+              {[GitBranch, LinkIcon, Mail].map((Icon, index) => (
+                <motion.a
+                  key={index}
+                  href="#"
+                  whileHover={{ scale: 1.2, rotate: 10 }}
+                  className="bg-white/20 p-3 rounded-full hover:bg-white/30 transition-colors"
+                >
+                  <Icon className="w-5 h-5" />
+                </motion.a>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="border-t border-green-500 pt-8 text-center">
+          <p className="text-green-100 mb-2">
+            © 2024 Nguyễn Anh Khoa. All rights reserved.
+          </p>
+          <p className="text-green-200 text-sm">
+            🌱 "Chăn nuôi hiện đại - Tương lai bền vững" 🌱
+          </p>
+        </div>
+      </div>
+    </footer>
+  );
+};
+
+// ==================== MAIN APP ====================
+function App() {
+  return (
+    <div className="min-h-screen bg-white">
+      <Navigation />
+      <main>
+        <HeroSection />
+        <AboutSection />
+        <ExperienceSection />
+        <SkillsSection />
+        <EducationSection />
+        <ContactSection />
+      </main>
+      <Footer />
+    </div>
+  );
+}
+
+export default App;
